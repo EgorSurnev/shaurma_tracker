@@ -95,3 +95,14 @@
     <% end %>
   </div>
 </div>
+<h1>Шаурма Ростов-на-Дону</h1>
+
+<% @places.each do |place| %>
+  <div>
+    <h2><%= place.name %></h2>
+    <p><%= place.address %></p>
+    <%= link_to "Открыть на карте", place.location_url, target: "_blank" %>
+    <%= link_to "Подробнее", place %>
+  </div>
+<% end %>
+
