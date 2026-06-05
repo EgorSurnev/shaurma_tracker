@@ -1,0 +1,4 @@
+<h1><%= @place.name %></h1>
+<p><%= @place.address %></p>
+<%= link_to "Открыть на Яндекс.Картах", @place.location_url, target: "_blank" %>
+<%= link_to "Назад", places_path %>
