@@ -14,6 +14,19 @@
       <!-- Ошибки валидации -->
       <%= render "devise/shared/error_messages", resource: resource %>
       
+
+        <div>
+      <%= f.label :nickname, class: "block text-gray-700 font-semibold mb-2 flex items-center gap-2" do %>
+        <span class="text-xl">🏷️</span>
+        Никнейм
+      <% end %>
+      <%= f.text_field :nickname, autofocus: true,
+          class: "w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:border-red-500 focus:outline-none focus:ring-2 focus:ring-red-200 transition-all",
+          placeholder: "ШаурмаГуру",
+          required: true %>
+      <p class="text-xs text-gray-500 mt-1">Как к вам обращаться?</p>
+    </div>
+
       <!-- Email -->
       <div>
         <%= f.label :email, class: "block text-gray-700 font-semibold mb-2 flex items-center gap-2" do %>

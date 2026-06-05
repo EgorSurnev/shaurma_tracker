@@ -1,0 +1,85 @@
+<div class="bg-white rounded-2xl shadow-2xl overflow-hidden">
+  <div class="bg-gradient-to-r from-amber-600 via-orange-600 to-red-600 px-6 py-8 text-center">
+    <div class="text-7xl mb-3">✏️</div>
+    <h1 class="text-3xl font-bold text-white mb-2">Редактировать профиль</h1>
+    <p class="text-amber-100 text-sm">Измените свои данные</p>
+  </div>
+  
+  <div class="p-6 md:p-8">
+    <%= form_for(resource, as: resource_name, url: registration_path(resource_name), 
+        html: { method: :put, class: "space-y-5" }) do |f| %>
+      
+      <%= render "devise/shared/error_messages", resource: resource %>
+      
+      <!-- Никнейм -->
+      <div>
+        <%= f.label :nickname, class: "block text-gray-700 font-semibold mb-2 flex items-center gap-2" do %>
+          <span class="text-xl">🏷️</span>
+          Никнейм
+        <% end %>
+        <%= f.text_field :nickname, 
+            class: "w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:border-amber-500 focus:outline-none focus:ring-2 focus:ring-amber-200 transition-all" %>
+      </div>
+      
+      <!-- Email -->
+      <div>
+        <%= f.label :email, class: "block text-gray-700 font-semibold mb-2 flex items-center gap-2" do %>
+          <span class="text-xl">📧</span>
+          Email
+        <% end %>
+        <%= f.email_field :email, autocomplete: "email",
+            class: "w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:border-amber-500 focus:outline-none focus:ring-2 focus:ring-amber-200 transition-all",
+            required: true %>
+      </div>
+      
+      <!-- Пароль (опционально) -->
+      <div>
+        <%= f.label :password, class: "block text-gray-700 font-semibold mb-2 flex items-center gap-2" do %>
+          <span class="text-xl">🔒</span>
+          Новый пароль
+        <% end %>
+        <%= f.password_field :password, autocomplete: "new-password",
+            class: "w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:border-amber-500 focus:outline-none focus:ring-2 focus:ring-amber-200 transition-all",
+            placeholder: "оставьте пустым, если не хотите менять" %>
+        <p class="text-xs text-gray-500 mt-1">Минимум <%= @minimum_password_length %> символов</p>
+      </div>
+      
+      <!-- Подтверждение пароля -->
+      <div>
+        <%= f.label :password_confirmation, class: "block text-gray-700 font-semibold mb-2 flex items-center gap-2" do %>
+          <span class="text-xl">✅</span>
+          Подтвердите пароль
+        <% end %>
+        <%= f.password_field :password_confirmation, autocomplete: "new-password",
+            class: "w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:border-amber-500 focus:outline-none focus:ring-2 focus:ring-amber-200 transition-all" %>
+      </div>
+      
+      <!-- Текущий пароль (обязательно для изменений) -->
+      <div>
+        <%= f.label :current_password, class: "block text-gray-700 font-semibold mb-2 flex items-center gap-2" do %>
+          <span class="text-xl">🔑</span>
+          Текущий пароль
+        <% end %>
+        <%= f.password_field :current_password, autocomplete: "current-password",
+            class: "w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:border-amber-500 focus:outline-none focus:ring-2 focus:ring-amber-200 transition-all",
+            required: true %>
+        <p class="text-xs text-gray-500 mt-1">Нужен для сохранения изменений</p>
+      </div>
+      
+      <div class="flex gap-3 pt-4">
+        <%= f.submit "Сохранить изменения", 
+            class: "flex-1 bg-gradient-to-r from-amber-500 to-orange-500 text-white font-bold py-3 rounded-xl hover:from-amber-600 hover:to-orange-600 transition-all cursor-pointer" %>
+        
+        <%= link_to "Отмена", :back, 
+            class: "flex-1 text-center border-2 border-gray-300 text-gray-700 font-bold py-3 rounded-xl hover:bg-gray-50 transition-all" %>
+      </div>
+    <% end %>
+    
+    <div class="mt-8 pt-6 border-t-2 border-gray-200 text-center">
+      <h3 class="text-red-600 font-semibold mb-2">Осторожно!</h3>
+      <%= button_to "Удалить аккаунт", registration_path(resource_name), 
+          data: { turbo_confirm: "Вы уверены? Это действие необратимо!", turbo_method: :delete },
+          class: "bg-red-500 hover:bg-red-600 text-white font-bold py-2 px-4 rounded-lg transition-colors" %>
+    </div>
+  </div>
+</div>
