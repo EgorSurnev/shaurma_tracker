@@ -3,11 +3,8 @@ Rails.application.routes.draw do
   resources :places
   resources :reviews, only: [:create, :destroy]
   
-  # Явно указываем, что для девайс-страниц используем свой layout
-  devise_scope :user do
-    get '/login', to: 'devise/sessions#new'
-    get '/register', to: 'devise/registrations#new'
-  end
+  # Добавляем маршрут для профиля пользователя (из main)
+  resources :users, only: [:show]
   
   # Корневой путь
   root to: 'places#index'

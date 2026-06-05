@@ -1,0 +1,24 @@
+<div class="profile-container" style="max-w-3xl; margin: 0 auto; padding: 20px;">
+  <div style="display: flex; align-items: center; gap: 20px; margin-bottom: 30px;">
+    <!-- Аватарка из Gravatar -->
+    <img src="<%= @user.gravatar_url(150) %>" alt="Avatar" style="border-radius: 50%;">
+    <div>
+      <h1><%= @user.nickname.presence || "Безымянный любитель шаурмы" %></h1>
+      <p style="color: gray;"><%= @user.email %></p>
+      <p><strong>Статус:</strong> <%= @user.role %></p>
+    </div>
+  </div>
+
+  <h2>Мои отзывы:</h2>
+  <% if @reviews.any? %>
+    <% @reviews.each do |review| %>
+      <div style="border: 1px solid #ccc; padding: 15px; margin-bottom: 15px; border-radius: 8px;">
+        <h3>Шаурмечная: <%= review.place.name if review.place %></h3>
+        <p><strong>Оценка:</strong> <%= review.rating %> / 5</p>
+        <p><%= review.content %></p>
+      </div>
+    <% end %>
+  <% else %>
+    <p>Вы пока не оставили ни одного отзыва.</p>
+  <% end %>
+</div>
