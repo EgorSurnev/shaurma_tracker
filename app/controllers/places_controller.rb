@@ -1,16 +1,14 @@
 class PlacesController < ApplicationController
-  # Заглушка для Auth-специалиста: пока разрешаем всем всё,
+  # Гость может видеть только список и одну точку. Все остальное — только для профи.
+  before_action :authenticate_user!, except: [:index, :show]
+  before_action :authorize_admin!, only: [:destroy]
 
   def index
     @places = Place.all
-    # ЗАГЛУШКА ДЛЯ FRONTEND:
-    # Переменная @places содержит список всех точек. Выводи их через .each
   end
 
   def show
     @place = Place.find(params[:id])
-    @reviews = @place.reviews.includes(:user)
-    @review = Review.new # Заготовка для формы нового отзыва
   end
 
   def new
@@ -18,22 +16,28 @@ class PlacesController < ApplicationController
   end
 
   def create
-    @place = Place.new(place_params)
-
-    # ЗАГЛУШКА: Привязываем к первому юзеру из базы,
-    # пока Auth-специалист не настроил current_user
-    @place.user = User.first || User.create!(email: 'test@test.com', password: 'password')
-
+    @place = current_user.places.build(place_params) # Привязываем к текущему юзеру
     if @place.save
-      redirect_to @place, notice: 'Точка успешно добавлена!'
+      redirect_to @place, notice: 'Точка добавлена!'
     else
       render :new, status: :unprocessable_entity
     end
+  end
+
+  def destroy
+    @place = Place.find(params[:id])
+    @place.destroy
+    redirect_to places_path, notice: 'Точка удалена админом.'
   end
 
   private
 
   def place_params
     params.require(:place).permit(:name, :address, :location_url)
+  end
+
+  # Метод проверки на админа
+  def authorize_admin!
+    redirect_to root_path, alert: 'У вас нет прав администратора' unless current_user&.admin?
   end
 end
