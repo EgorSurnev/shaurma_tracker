@@ -1,0 +1,6 @@
+<div style="max-width: 600px; margin: 40px auto; font-family: sans-serif;">
+  <h1>✏️ Редактирование: <%= @place.name %></h1>
+  <%= render "form", place: @place %>
+  <br>
+  <%= link_to "← Назад к просмотру", place_path(@place) %>
+</div>
