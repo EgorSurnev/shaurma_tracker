@@ -1,9 +1,29 @@
-# This file should ensure the existence of records required to run the application in every environment (production,
-# development, test). The code here should be idempotent so that it can be executed at any point in every environment.
-# The data can then be loaded with the bin/rails db:seed command (or created alongside the database with db:setup).
-#
-# Example:
-#
-#   ["Action", "Comedy", "Drama", "Horror"].each do |genre_name|
-#     MovieGenre.find_or_create_by!(name: genre_name)
-#   end
+# Создаем тестового пользователя
+admin = User.find_or_create_by!(email: 'admin@shaurma.ru') do |u|
+  u.password = '123456'
+end
+
+puts "Создаю шаурмечные Ростова..."
+
+Place.create!([
+                {
+                  name: "Шаурма на ЦГБ",
+                  address: "ул. Фурмановская / Ворошиловский",
+                  location_url: "https://yandex.ru/maps/-/CDu6Y-Y3",
+                  user: admin
+                },
+                {
+                  name: "Ялла (Шаурма)",
+                  address: "пл. Театральная, 3",
+                  location_url: "https://yandex.ru/maps/-/CDu6YCnS",
+                  user: admin
+                },
+                {
+                  name: "Вкус Востока",
+                  address: "пр. Буденновский, 12",
+                  location_url: "https://yandex.ru/maps/-/CDu6YH~K",
+                  user: admin
+                }
+              ])
+
+puts "Готово! Теперь в базе #{Place.count} точек."
