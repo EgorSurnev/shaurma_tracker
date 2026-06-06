@@ -1,0 +1,37 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  input, textarea, select {
+    @apply border-2 border-gray-300 rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-amber-500 focus:border-transparent transition-all;
+  }
+  
+  input:focus, textarea:focus, select:focus {
+    @apply ring-2 ring-amber-500;
+  }
+}
+
+@layer components {
+  .btn-primary {
+    @apply w-full bg-gradient-to-r from-amber-600 to-orange-600 text-white font-bold py-3 px-4 rounded-xl hover:from-amber-700 hover:to-orange-700 transform hover:scale-[1.02] transition-all duration-200 shadow-lg cursor-pointer border-2 border-white/20;
+  }
+  
+  .btn-success {
+    @apply w-full bg-gradient-to-r from-green-600 to-emerald-600 text-white font-bold py-3 px-4 rounded-xl hover:from-green-700 hover:to-emerald-700 transform hover:scale-[1.02] transition-all duration-200 shadow-md text-center border-2 border-white/20;
+  }
+  
+  .btn-danger {
+    @apply w-full bg-gradient-to-r from-red-600 to-amber-600 text-white font-bold py-3 px-4 rounded-xl hover:from-red-700 hover:to-amber-700 transform hover:scale-[1.02] transition-all duration-200 shadow-lg cursor-pointer border-2 border-white/20;
+  }
+  
+  /* Дополнительный класс для маленьких кнопок */
+  .btn-sm {
+    @apply px-3 py-1 text-sm;
+  }
+  
+  /* Карточка шаурмечной */
+  .shaorma-card {
+    @apply bg-white rounded-xl shadow-lg overflow-hidden hover:shadow-xl transition-all duration-300 hover:-translate-y-1;
+  }
+}

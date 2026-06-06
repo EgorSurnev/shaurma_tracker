@@ -1,0 +1,74 @@
+<!-- Navbar -->
+<nav class="bg-gradient-to-r from-amber-600 via-orange-600 to-red-600 shadow-lg sticky top-0 z-50">
+  <div class="container mx-auto px-4 py-3">
+    <div class="flex flex-col sm:flex-row justify-between items-center gap-3">
+      
+      <!-- Логотип и название (всегда видно) -->
+      <div class="flex items-center gap-2">
+        <%= link_to root_path, class: "flex items-center gap-2 hover:opacity-80 transition-opacity" do %>
+          <span class="text-3xl">🌯</span>
+          <span class="text-xl font-bold text-white">Шаурма Трекер</span>
+        <% end %>
+      </div>
+      
+      <!-- Навигационные ссылки -->
+      <div class="flex items-center gap-3 flex-wrap justify-center">
+        <!-- Главная -->
+        <%= link_to root_path, class: "text-white hover:text-amber-200 transition-colors flex items-center gap-1 px-3 py-1 rounded-lg hover:bg-white/10" do %>
+          <span>🏠</span>
+          <span class="hidden sm:inline">Главная</span>
+        <% end %>
+        
+        <!-- Список точек -->
+        <%= link_to places_path, class: "text-white hover:text-amber-200 transition-colors flex items-center gap-1 px-3 py-1 rounded-lg hover:bg-white/10" do %>
+          <span>🥙</span>
+          <span class="hidden sm:inline">Все точки</span>
+        <% end %>
+        
+        <!-- Добавить точку (только для авторизованных) -->
+        <% if user_signed_in? %>
+          <%= link_to new_place_path, class: "text-white hover:text-amber-200 transition-colors flex items-center gap-1 px-3 py-1 rounded-lg hover:bg-white/10" do %>
+            <span>➕</span>
+            <span class="hidden sm:inline">Добавить</span>
+          <% end %>
+        <% end %>
+        
+        <!-- Разделитель -->
+        <span class="text-white/30 hidden sm:inline">|</span>
+        
+        <!-- Профиль / Вход / Регистрация -->
+        <% if user_signed_in? %>
+          <!-- Аватар и профиль -->
+          <%= link_to user_path(current_user), class: "flex items-center gap-2 bg-white/10 hover:bg-white/20 transition-all px-3 py-1 rounded-full" do %>
+            <img src="https://www.gravatar.com/avatar/<%= Digest::MD5.hexdigest(current_user.email.downcase) %>?s=32&d=identicon" 
+                 class="w-7 h-7 rounded-full border-2 border-white">
+            <span class="text-white font-medium hidden sm:inline">
+              <%= current_user.nickname || current_user.email.split('@').first %>
+            </span>
+            <span class="text-white text-xs hidden md:inline">▼</span>
+          <% end %>
+          
+          <!-- Выйти -->
+          <%= link_to destroy_user_session_path, 
+              data: { turbo_method: :delete },
+              class: "text-white hover:text-amber-200 transition-colors flex items-center gap-1 px-3 py-1 rounded-lg hover:bg-white/10" do %>
+            <span>🚪</span>
+            <span class="hidden sm:inline">Выйти</span>
+          <% end %>
+        <% else %>
+          <!-- Войти -->
+          <%= link_to new_user_session_path, class: "text-white hover:text-amber-200 transition-colors flex items-center gap-1 px-3 py-1 rounded-lg hover:bg-white/10" do %>
+            <span>🔐</span>
+            <span>Войти</span>
+          <% end %>
+          
+          <!-- Регистрация -->
+          <%= link_to new_user_registration_path, class: "bg-white text-amber-600 hover:bg-amber-100 transition-colors font-semibold px-4 py-1 rounded-full flex items-center gap-1" do %>
+            <span>✨</span>
+            <span>Регистрация</span>
+          <% end %>
+        <% end %>
+      </div>
+    </div>
+  </div>
+</nav>

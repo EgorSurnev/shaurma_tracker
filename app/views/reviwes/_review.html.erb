@@ -1,0 +1,31 @@
+<div class="bg-gray-50 rounded-xl p-4 border-l-4 border-amber-400 hover:shadow-md transition-all">
+  <div class="flex justify-between items-start mb-2">
+    <div class="flex items-center gap-2">
+      <div class="flex text-yellow-400">
+        <% review.rating.times do %>
+          <span>★</span>
+        <% end %>
+        <% (5 - review.rating).times do %>
+          <span class="text-gray-300">★</span>
+        <% end %>
+      </div>
+      <span class="text-sm text-gray-500">(<%= review.rating %>/5)</span>
+    </div>
+    
+    <% if current_user&.admin? %>
+      <%= link_to review_path(review), 
+          data: { turbo_method: :delete, turbo_confirm: "Удалить отзыв?" },
+          class: "text-red-400 hover:text-red-600 text-sm transition-colors" do %>
+        🗑 Удалить
+      <% end %>
+    <% end %>
+  </div>
+  
+  <p class="text-gray-700 mb-2"><%= review.content %></p>
+  
+  <div class="flex items-center gap-2 text-xs text-gray-400">
+    <span>👤 <%= review.user.email %></span>
+    <span>•</span>
+    <span><%= time_ago_in_words(review.created_at) %> назад</span>
+  </div>
+</div>
