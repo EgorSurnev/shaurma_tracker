@@ -1,0 +1,86 @@
+<!-- МЯСНАЯ ШАПКА - ПРИНУДИТЕЛЬНЫЕ СТИЛИ -->
+<nav style="background: linear-gradient(135deg, #991b1b 0%, #dc2626 50%, #ea580c 100%) !important; box-shadow: 0 10px 15px -3px rgba(0,0,0,0.3); position: sticky; top: 0; z-index: 50; border-bottom: 4px solid #fbbf24;">
+  <div style="max-width: 1280px; margin: 0 auto; padding: 0.75rem 1rem;">
+    <div style="display: flex; flex-direction: column; gap: 0.75rem;">
+      
+      <!-- Логотип - по центру на мобилках -->
+      <div style="display: flex; justify-content: center;">
+        <%= link_to root_path, style: "display: flex; align-items: center; gap: 0.75rem; text-decoration: none; transition: transform 0.2s;" do %>
+          <div style="position: relative;">
+            <span style="font-size: 2.5rem;">🥩</span>
+            <span style="position: absolute; top: -4px; right: -8px; font-size: 0.75rem;">🔥</span>
+          </div>
+          <div>
+            <span style="font-size: 1.5rem; font-weight: 900; color: white; letter-spacing: 0.05em;">ШАУРМА ТРЕКЕР</span>
+            <p style="font-size: 0.7rem; color: #fcd34d; margin: 0;">найди свою идеальную шаурму</p>
+          </div>
+        <% end %>
+      </div>
+      
+      <!-- Навигация -->
+      <div style="display: flex; flex-wrap: wrap; justify-content: center; gap: 0.5rem;">
+        <!-- Главная -->
+        <%= link_to root_path, style: "display: flex; align-items: center; gap: 0.25rem; padding: 0.5rem 1rem; background: rgba(255,255,255,0.1); border-radius: 9999px; color: white; text-decoration: none; transition: all 0.2s;" do %>
+          <span>🏠</span>
+          <span style="display: none; @media (min-width: 640px) { display: inline; }">Главная</span>
+        <% end %>
+        
+        <!-- Все точки -->
+        <%= link_to places_path, style: "display: flex; align-items: center; gap: 0.25rem; padding: 0.5rem 1rem; background: rgba(255,255,255,0.1); border-radius: 9999px; color: white; text-decoration: none;" do %>
+          <span>🥙</span>
+          <span style="display: none; @media (min-width: 640px) { display: inline; }">Все точки</span>
+        <% end %>
+        
+        <!-- Добавить точку -->
+        <% if user_signed_in? %>
+          <%= link_to new_place_path, style: "display: flex; align-items: center; gap: 0.25rem; padding: 0.5rem 1rem; background: #d97706; border-radius: 9999px; color: white; text-decoration: none;" do %>
+            <span>➕</span>
+            <span style="display: none; @media (min-width: 640px) { display: inline; }">Добавить</span>
+          <% end %>
+        <% end %>
+        
+        <!-- Разделитель -->
+        <span style="color: rgba(255,255,255,0.3); display: none; @media (min-width: 768px) { display: inline; }">|</span>
+        
+        <% if user_signed_in? %>
+          <!-- Профиль -->
+          <%= link_to user_path(current_user), style: "display: flex; align-items: center; gap: 0.5rem; padding: 0.25rem 0.75rem; background: rgba(255,255,255,0.15); border-radius: 9999px; color: white; text-decoration: none;" do %>
+            <img src="https://www.gravatar.com/avatar/<%= Digest::MD5.hexdigest(current_user.email.downcase) %>?s=28&d=identicon" 
+                 style="width: 28px; height: 28px; border-radius: 9999px; border: 2px solid #fbbf24;">
+            <span style="display: none; @media (min-width: 640px) { display: inline; }"><%= current_user.nickname || current_user.email.split('@').first %></span>
+          <% end %>
+          
+          <!-- Выйти -->
+          <%= link_to destroy_user_session_path, 
+              data: { turbo_method: :delete },
+              style: "display: flex; align-items: center; gap: 0.25rem; padding: 0.5rem 1rem; background: rgba(255,255,255,0.1); border-radius: 9999px; color: white; text-decoration: none;" do %>
+            <span>🚪</span>
+            <span style="display: none; @media (min-width: 640px) { display: inline; }">Выйти</span>
+          <% end %>
+        <% else %>
+          <!-- Войти -->
+          <%= link_to new_user_session_path, style: "display: flex; align-items: center; gap: 0.25rem; padding: 0.5rem 1rem; background: rgba(255,255,255,0.1); border-radius: 9999px; color: white; text-decoration: none;" do %>
+            <span>🔐</span>
+            <span>Войти</span>
+          <% end %>
+          
+          <!-- Регистрация -->
+          <%= link_to new_user_registration_path, style: "display: flex; align-items: center; gap: 0.25rem; padding: 0.5rem 1rem; background: linear-gradient(135deg, #fbbf24 0%, #f59e0b 100%); border-radius: 9999px; color: #78350f; font-weight: bold; text-decoration: none;" do %>
+            <span>✨</span>
+            <span>Регистрация</span>
+            <span style="font-size: 0.75rem;">🔥</span>
+          <% end %>
+        <% end %>
+      </div>
+    </div>
+  </div>
+</nav>
+
+<style>
+  @media (min-width: 640px) {
+    .nav-text { display: inline; }
+  }
+  @media (max-width: 640px) {
+    .hide-on-mobile { display: none; }
+  }
+</style>

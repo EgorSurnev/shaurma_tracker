@@ -1,0 +1,80 @@
+<%= form_with(model: [place, review], 
+              local: false,
+              multipart: true,
+              class: "space-y-4",
+              id: "reviewForm") do |f| %>
+  
+  <div>
+    <%= f.label :rating, "Оценка", class: "block text-gray-700 font-bold mb-2" %>
+    <div class="flex gap-2" id="ratingStars">
+      <% (1..5).each do |star| %>
+        <button type="button" 
+                onclick="setRatingValue(<%= star %>)"
+                class="text-4xl text-gray-300 hover:text-yellow-400 transition-all">
+          ★
+        </button>
+      <% end %>
+    </div>
+    <%= f.hidden_field :rating, id: "reviewRating", required: true %>
+  </div>
+  
+  <div>
+    <%= f.label :content, "Комментарий", class: "block text-gray-700 font-bold mb-2" %>
+    <%= f.text_area :content, 
+        rows: 4, 
+        placeholder: "Как вам мясо? А соус?",
+        class: "w-full border-3 border-green-600 rounded-2xl p-3 focus:outline-none focus:border-green-700",
+        required: true %>
+  </div>
+  
+  <div>
+    <%= f.label :photo, "Фото шаурмы", class: "block text-gray-700 font-bold mb-2" %>
+    <%= f.file_field :photo, 
+        accept: "image/png,image/jpeg,image/jpg,image/webp",
+        class: "w-full text-sm file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-semibold file:bg-red-50 file:text-red-700" %>
+    <p class="text-xs text-gray-500 mt-1">📸 Поделись фото своей шаурмы</p>
+  </div>
+  
+  <div class="flex gap-3 pt-2">
+    <%= f.submit "Опубликовать отзыв", 
+        class: "flex-1 bg-gradient-to-r from-red-600 to-orange-500 hover:from-red-700 hover:to-orange-600 text-white font-bold py-3 rounded-xl transition-all cursor-pointer shadow-md" %>
+    <button type="button" 
+            onclick="closeReviewModal()" 
+            class="px-6 py-3 border-2 border-gray-300 rounded-xl hover:bg-gray-50 transition-all font-semibold">
+      Отмена
+    </button>
+  </div>
+<% end %>
+
+<script>
+  function setRatingValue(value) {
+    document.getElementById('reviewRating').value = value;
+    const stars = document.querySelectorAll('#ratingStars button');
+    stars.forEach((star, index) => {
+      if (index < value) {
+        star.classList.remove('text-gray-300');
+        star.classList.add('text-yellow-400');
+      } else {
+        star.classList.remove('text-yellow-400');
+        star.classList.add('text-gray-300');
+      }
+    });
+  }
+  
+  function closeReviewModal() {
+    const modal = document.getElementById('reviewModal');
+    if (modal) modal.style.display = 'none';
+    
+    const form = document.getElementById('reviewForm');
+    if (form) form.reset();
+    
+    const ratingInput = document.getElementById('reviewRating');
+    if (ratingInput) ratingInput.value = '';
+    
+    const stars = document.querySelectorAll('#ratingStars button');
+    stars.forEach(star => {
+      star.classList.remove('text-yellow-400');
+      star.classList.add('text-gray-300');
+    });
+  }
+</script>

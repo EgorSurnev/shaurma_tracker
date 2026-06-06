@@ -1,17 +1,26 @@
 # encoding: utf-8
 
-puts "Создаём тестового пользователя..."
+puts "🥩 Создаём тестового пользователя..."
 admin = User.find_or_create_by!(email: 'admin@shaurma.ru') do |u|
   u.password = '123456'
-  u.role = 1
+  u.role = 2
+  u.nickname = 'ШаурмаМастер'
 end
 
-puts "Очищаем старые данные..."
+puts "👤 Создаём обычного пользователя..."
+user = User.find_or_create_by!(email: 'user@shaurma.ru') do |u|
+  u.password = '123456'
+  u.role = 0
+  u.nickname = 'ГМурман'
+end
+
+puts "🗑️ Очищаем старые данные..."
+Review.destroy_all
 Place.destroy_all
 
-puts "Создаём шаурмечные Ростова..."
+puts "🌯 Создаём шаурмечные Ростова..."
 
-Place.create!([
+places = Place.create!([
   {
     name: "Шаурма Маркет",
     address: "Ворошиловский просп., 105А, Ростов-на-Дону",
@@ -158,4 +167,32 @@ Place.create!([
   }
 ])
 
-puts "Готово! В базе #{Place.count} точек."
+puts "✅ Создано #{Place.count} точек"
+
+puts "💬 Добавляем тестовые отзывы..."
+
+# Отзывы от админа на первые 5 точек
+reviews_data = [
+  { place: places[0], rating: 5, content: "Лучшая шаурма в городе! Мясо сочное, соус божественный.🔥", user: admin },
+  { place: places[0], rating: 4, content: "Отличное место, но немного дороговато.", user: user },
+  { place: places[1], rating: 4, content: "Хорошая шаурма, быстрая подача. Рекомендую!", user: admin },
+  { place: places[1], rating: 5, content: "Обожаю их чесночный соус! 😍", user: user },
+  { place: places[2], rating: 3, content: "Неплохо, но мясо суховато сегодня было.", user: admin },
+  { place: places[2], rating: 4, content: "Хорошее соотношение цена/качество.", user: user },
+  { place: places[3], rating: 5, content: "Шаурма бомба! Особенно с сыром. 🧀", user: admin },
+  { place: places[4], rating: 4, content: "Быстро, вкусно, но соуса маловато.", user: user },
+  { place: places[5], rating: 5, content: "Обалденная шаурма! Буду заказывать ещё.", user: admin },
+  { place: places[6], rating: 3, content: "Обычная шаурма, ничего особенного.", user: user },
+]
+
+reviews_data.each do |data|
+  Review.create!(
+    place: data[:place],
+    user: data[:user],
+    rating: data[:rating],
+    content: data[:content]
+  )
+end
+
+puts "✅ Добавлено #{Review.count} отзывов"
+puts "🥩 Готово! В базе #{Place.count} точек и #{Review.count} отзывов."

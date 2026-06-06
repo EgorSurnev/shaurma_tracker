@@ -1,24 +1,89 @@
-<div class="profile-container" style="max-w-3xl; margin: 0 auto; padding: 20px;">
-  <div style="display: flex; align-items: center; gap: 20px; margin-bottom: 30px;">
-    <!-- Аватарка из Gravatar -->
-    <img src="<%= @user.gravatar_url(150) %>" alt="Avatar" style="border-radius: 50%;">
-    <div>
-      <h1><%= @user.nickname.presence || "Безымянный любитель шаурмы" %></h1>
-      <p style="color: gray;"><%= @user.email %></p>
-      <p><strong>Статус:</strong> <%= @user.role %></p>
+<div class="container mx-auto px-4 py-8 max-w-4xl">
+  <!-- Кнопка назад -->
+  <%= link_to places_path, 
+      class: "inline-flex items-center gap-2 text-amber-600 hover:text-amber-700 mb-6 transition-colors" do %>
+    <span>←</span> Назад к списку
+  <% end %>
+  
+  <!-- Карточка профиля пользователя -->
+  <div class="bg-white rounded-2xl shadow-xl overflow-hidden mb-8">
+    <div class="bg-gradient-to-r from-amber-600 to-orange-600 px-6 py-8 text-center">
+      <div class="text-7xl mb-3">👤</div>
+      <h1 class="text-3xl font-bold text-white mb-2"><%= @user.nickname || @user.email %></h1>
+      <p class="text-amber-100 text-sm">Любитель шаурмы 🌯</p>
+    </div>
+    
+    <div class="p-6">
+      <div class="flex items-center justify-between py-3 border-b border-gray-100">
+        <span class="text-gray-600">📧 Email:</span>
+        <span class="font-semibold"><%= @user.email %></span>
+      </div>
+      <div class="flex items-center justify-between py-3 border-b border-gray-100">
+        <span class="text-gray-600">📅 Регистрация:</span>
+        <span class="font-semibold"><%= @user.created_at.strftime("%d.%m.%Y в %H:%M") if @user.created_at %></span>
+      </div>
+      <div class="flex items-center justify-between py-3">
+        <span class="text-gray-600">🌯 Отзывов написано:</span>
+        <span class="font-semibold text-xl text-red-600"><%= @user.reviews.count %></span>
+      </div>
     </div>
   </div>
-
-  <h2>Мои отзывы:</h2>
-  <% if @reviews.any? %>
-    <% @reviews.each do |review| %>
-      <div style="border: 1px solid #ccc; padding: 15px; margin-bottom: 15px; border-radius: 8px;">
-        <h3>Шаурмечная: <%= review.place.name if review.place %></h3>
-        <p><strong>Оценка:</strong> <%= review.rating %> / 5</p>
-        <p><%= review.content %></p>
-      </div>
-    <% end %>
-  <% else %>
-    <p>Вы пока не оставили ни одного отзыва.</p>
-  <% end %>
+  
+  <!-- Список отзывов пользователя -->
+  <div class="bg-white rounded-2xl shadow-xl overflow-hidden">
+    <div class="bg-gray-50 px-6 py-4 border-b">
+      <h2 class="text-2xl font-bold text-gray-800 flex items-center gap-2">
+        <span>💬</span> Отзывы
+      </h2>
+    </div>
+    
+    <div class="p-6">
+      <% if @user.reviews.any? %>
+        <div class="space-y-4">
+          <% @user.reviews.includes(:place).order(created_at: :desc).each do |review| %>
+            <div class="bg-gray-50 rounded-xl p-4 border-l-4 border-amber-500 hover:shadow-md transition-all">
+              <div class="flex justify-between items-start mb-2">
+                <div>
+                  <div class="flex text-yellow-400 text-lg">
+                    <% review.rating.times do %>★<% end %>
+                    <% (5 - review.rating).times do %><span class="text-gray-300">★</span><% end %>
+                  </div>
+                  <span class="text-sm text-gray-500">Оценка: <%= review.rating %>/5</span>
+                </div>
+                
+                <!-- Кнопка удаления (только для админа или владельца профиля) -->
+                <% if current_user && (current_user.admin? || current_user.id == @user.id) %>
+                  <%= button_to "🗑 Удалить", 
+                      place_review_path(review.place, review), 
+                      method: :delete,
+                      data: { confirm: "Удалить этот отзыв?" },
+                      class: "bg-red-500 hover:bg-red-700 text-white text-sm font-bold py-1 px-2 rounded transition-colors" %>
+                <% end %>
+              </div>
+              
+              <p class="text-gray-700 mb-2"><%= review.content %></p>
+              
+              <% if review.photo.attached? %>
+                <div class="mb-2">
+                  <%= image_tag review.photo, class: "rounded-lg max-h-48 w-auto object-cover shadow-md" %>
+                </div>
+              <% end %>
+              
+              <div class="text-xs text-gray-400 flex items-center gap-2 mt-2">
+                <span>📍 <%= link_to review.place.name, place_path(review.place), class: "text-blue-500 hover:underline" %></span>
+                <span>•</span>
+                <span><%= time_ago_in_words(review.created_at) %> назад</span>
+              </div>
+            </div>
+          <% end %>
+        </div>
+      <% else %>
+        <div class="text-center py-8">
+          <span class="text-5xl mb-2 block">😢</span>
+          <p class="text-gray-500">Пока нет отзывов</p>
+          <p class="text-gray-400 text-sm">Пользователь ещё не оставил ни одного отзыва</p>
+        </div>
+      <% end %>
+    </div>
+  </div>
 </div>

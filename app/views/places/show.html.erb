@@ -1,4 +1,216 @@
-<h1><%= @place.name %></h1>
-<p><%= @place.address %></p>
-<%= link_to "Открыть на Яндекс.Картах", @place.location_url, target: "_blank" %>
-<%= link_to "Назад", places_path %>
+<%= turbo_frame_tag dom_id(@place) do %>
+  <div class="container mx-auto px-4 py-8 max-w-4xl">
+    <!-- Кнопка назад -->
+    <%= link_to places_path, 
+        class: "inline-flex items-center gap-2 text-amber-600 hover:text-amber-700 mb-6 transition-colors" do %>
+      <span>←</span> Назад к списку
+    <% end %>
+    
+    <!-- Карточка шаурмечной -->
+    <div class="bg-white rounded-2xl shadow-xl overflow-hidden">
+      <div class="h-64 bg-gradient-to-r from-amber-400 to-orange-500 flex items-center justify-center relative">
+        <span class="text-8xl">🥙</span>
+        <% if user_signed_in? && (current_user.admin? || @place.user == current_user) %>
+          <div class="absolute top-4 right-4">
+            <%= link_to edit_place_path(@place), 
+                class: "bg-white bg-opacity-90 hover:bg-opacity-100 p-2 rounded-lg transition-all shadow-md" do %>
+              ✏️ Редактировать
+            <% end %>
+          </div>
+        <% end %>
+      </div>
+      
+      <div class="p-6 md:p-8">
+        <h1 class="text-3xl md:text-4xl font-bold text-gray-800 mb-2"><%= @place.name %></h1>
+        <p class="text-gray-600 mb-2 flex items-center gap-2">
+          <span class="text-xl">📍</span> <%= @place.address %>
+        </p>
+        
+        <% if @place.user %>
+          <div class="text-xs text-gray-400 mb-3 flex items-center gap-1">
+            <span>👤 Добавил:</span>
+            <span class="font-medium"><%= @place.user.nickname || @place.user.email %></span>
+          </div>
+        <% end %>
+        
+        <% if @place.location_url.present? %>
+          <%= link_to @place.location_url, target: "_blank", 
+              class: "inline-flex items-center gap-1 text-blue-600 hover:text-blue-700 text-sm mb-6" do %>
+            🗺 Открыть карту →
+          <% end %>
+        <% end %>
+        
+        <div class="bg-gray-50 rounded-xl p-4 mb-6">
+          <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+            <div>
+              <span class="text-gray-600 text-sm">Средняя оценка</span>
+              <div class="flex items-center gap-2 mt-1">
+                <div class="flex text-2xl text-yellow-400">
+                  <% (@place.average_rating.to_i).times do %>
+                    <span>★</span>
+                  <% end %>
+                  <% (5 - @place.average_rating.to_i).times do %>
+                    <span class="text-gray-300">★</span>
+                  <% end %>
+                </div>
+                <span class="text-2xl font-bold text-gray-800"><%= @place.average_rating %>/5</span>
+              </div>
+            </div>
+            <div class="text-gray-500 text-sm">
+              на основе <%= @place.reviews.count %> отзывов
+            </div>
+          </div>
+        </div>
+        
+        <!-- Кнопка открытия модалки -->
+        <% if user_signed_in? %>
+          <button type="button" 
+                  onclick="document.getElementById('reviewModal').style.display='flex'"
+                  style="width: 100%; background: linear-gradient(135deg, #22c55e 0%, #16a34a 100%); color: white; font-weight: bold; padding: 12px 24px; border-radius: 12px; border: none; cursor: pointer; margin-top: 16px;">
+            ✍️ Написать отзыв
+          </button>
+        <% end %>
+        
+        <!-- Секция с отзывами -->
+<div class="mt-10">
+  <h2 class="text-2xl font-bold text-gray-800 mb-4 flex items-center gap-2">
+    <span>💬</span> Отзывы
+  </h2>
+  
+  <div id="reviews">
+    <% if @place.reviews.any? %>
+      <% @place.reviews.each do |review| %>
+        <div class="bg-gray-50 rounded-xl p-4 border-l-4 border-red-500 mb-4">
+          <div class="flex justify-between items-start mb-2">
+            <div class="flex items-center gap-2">
+              <div class="flex text-yellow-400">
+                <% review.rating.times do %>★<% end %>
+                <% (5 - review.rating).times do %><span class="text-gray-300">★</span><% end %>
+              </div>
+              <span class="text-sm text-gray-500">(<%= review.rating %>/5)</span>
+            </div>
+            
+            <!-- Кнопка удаления для админа ИЛИ автора отзыва -->
+            <% if current_user && (current_user.admin? || review.user == current_user) %>
+              <%= link_to place_review_path(@place, review), 
+                  data: { turbo_method: :delete, turbo_confirm: "Удалить отзыв?" },
+                  class: "text-red-400 hover:text-red-600 text-sm transition-colors" do %>
+                🗑 Удалить
+              <% end %>
+            <% end %>
+          </div>
+          
+          <p class="text-gray-700 mb-2"><%= review.content %></p>
+          
+                    <% if review.photo.attached? %>
+            <div class="mb-2">
+              <%= image_tag review.photo, class: "rounded-lg max-h-48 w-auto object-cover" %>
+            </div>
+          <% end %>
+          
+          <div class="text-xs text-gray-400 flex items-center gap-2">
+            <span>👤 <%= link_to (review.user.nickname || review.user.email), user_path(review.user), class: "text-blue-500 hover:underline", data: { turbo: false } %></span>
+            <span>•</span>
+            <span><%= time_ago_in_words(review.created_at) %> назад</span>
+            <% if review.user == current_user %>
+              <span class="text-green-600 text-xs">(Ваш отзыв)</span>
+            <% end %>
+          </div>
+        </div>
+      <% end %>
+    <% else %>
+      <div class="text-center py-8 bg-gray-50 rounded-xl">
+        <span class="text-4xl mb-2 block">😢</span>
+        <p class="text-gray-500">Пока никто не оставил отзыв</p>
+        <p class="text-gray-400 text-sm">Стань первым!</p>
+      </div>
+    <% end %>
+  </div>
+</div>
+  
+    <!-- Модальное окно -->
+  <div id="reviewModal" 
+       style="display: none; position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.7); z-index: 1000; align-items: center; justify-content: center;"
+       onclick="if(event.target===this) this.style.display='none'">
+    <div style="background: white; border-radius: 16px; max-width: 500px; width: 90%; margin: auto; padding: 24px;">
+      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px;">
+        <h3 style="font-size: 24px; font-weight: bold;">Новый отзыв</h3>
+        <button onclick="document.getElementById('reviewModal').style.display='none'" 
+                style="font-size: 28px; background: none; border: none; cursor: pointer;">&times;</button>
+      </div>
+      
+      <%= form_with(model: [@place, Review.new], local: true, multipart: true, id: "reviewForm") do |f| %>
+        
+        <!-- РЕЙТИНГ -->
+        <div style="margin-bottom: 16px;">
+          <label style="display: block; margin-bottom: 8px; font-weight: bold;">Ваша оценка</label>
+          <div style="display: flex; gap: 8px;">
+            <% (1..5).each do |star| %>
+              <span onclick="setRatingValue(<%= star %>)" 
+                    data-rating="<%= star %>"
+                    style="font-size: 40px; cursor: pointer; color: #d1d5db; transition: color 0.2s;">
+                ★
+              </span>
+            <% end %>
+          </div>
+          <%= f.hidden_field :rating, id: "reviewRatingValue", required: true %>
+        </div>
+        
+        <div style="margin-bottom: 16px;">
+          <%= f.label :content, "Комментарий", style: "display: block; margin-bottom: 8px; font-weight: bold;" %>
+          <%= f.text_area :content, rows: 4, required: true,
+              style: "width: 100%; border: 2px solid #d1d5db; border-radius: 12px; padding: 12px;" %>
+        </div>
+        
+        <div style="margin-bottom: 16px;">
+          <%= f.label :photo, "Фото шаурмы", style: "display: block; margin-bottom: 8px; font-weight: bold;" %>
+          <%= f.file_field :photo, accept: "image/png,image/jpeg,image/jpg,image/webp", style: "width: 100%;" %>
+        </div>
+        
+        <div style="display: flex; gap: 12px; margin-top: 16px;">
+          <%= f.submit "Опубликовать отзыв", 
+              style: "flex: 1; background: linear-gradient(135deg, #f59e0b 0%, #ea580c 100%); color: white; font-weight: bold; padding: 12px; border: none; border-radius: 12px; cursor: pointer;" %>
+          <button type="button" onclick="document.getElementById('reviewModal').style.display='none'" 
+                  style="padding: 12px 24px; border: 2px solid #d1d5db; background: white; border-radius: 12px; cursor: pointer;">
+            Отмена
+          </button>
+        </div>
+      <% end %>
+    </div>
+  </div>
+<% end %>
+
+<script>
+  function setRatingValue(value) {
+    document.getElementById('reviewRatingValue').value = value;
+    
+    // Находим все звёзды
+    const stars = document.querySelectorAll('#reviewModal span[data-rating]');
+    stars.forEach((star) => {
+      const starValue = parseInt(star.getAttribute('data-rating'));
+      if (starValue <= value) {
+        star.style.color = '#fbbf24'; // жёлтый
+      } else {
+        star.style.color = '#d1d5db'; // серый
+      }
+    });
+  }
+  
+  // Функция для очистки формы после отправки
+  document.addEventListener('turbo:submit-end', function() {
+    var modal = document.getElementById('reviewModal');
+    if (modal) modal.style.display = 'none';
+    
+    var form = document.getElementById('reviewForm');
+    if (form) form.reset();
+    
+    // Сбрасываем звёзды
+    const stars = document.querySelectorAll('#reviewModal span[data-rating]');
+    stars.forEach((star) => {
+      star.style.color = '#d1d5db';
+    });
+    
+    var ratingInput = document.getElementById('reviewRatingValue');
+    if (ratingInput) ratingInput.value = '';
+  });
+</script>

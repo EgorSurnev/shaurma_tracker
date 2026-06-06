@@ -1,0 +1,133 @@
+ru:
+  time:
+    formats:
+      long: "%d %B %Y, %H:%M"
+      short: "%d %b, %H:%M"
+      default: "%d.%m.%Y, %H:%M"
+  date:
+    formats:
+      long: "%d %B %Y"
+      short: "%d %b"
+      default: "%d.%m.%Y"
+  datetime:
+    distance_in_words:
+      half_a_minute: "полминуты назад"
+      less_than_x_seconds:
+        one: "меньше секунды назад"
+        few: "меньше %{count} секунд назад"
+        many: "меньше %{count} секунд назад"
+        other: "меньше %{count} секунд назад"
+      x_seconds:
+        one: "%{count} секунду назад"
+        few: "%{count} секунды назад"
+        many: "%{count} секунд назад"
+        other: "%{count} секунд назад"
+      less_than_x_minutes:
+        one: "меньше минуты назад"
+        few: "меньше %{count} минут назад"
+        many: "меньше %{count} минут назад"
+        other: "меньше %{count} минут назад"
+      x_minutes:
+        one: "%{count} минуту назад"
+        few: "%{count} минуты назад"
+        many: "%{count} минут назад"
+        other: "%{count} минут назад"
+      about_x_hours:
+        one: "около часа назад"
+        few: "около %{count} часов назад"
+        many: "около %{count} часов назад"
+        other: "около %{count} часов назад"
+      x_days:
+        one: "%{count} день назад"
+        few: "%{count} дня назад"
+        many: "%{count} дней назад"
+        other: "%{count} дней назад"
+      about_x_months:
+        one: "около месяца назад"
+        few: "около %{count} месяцев назад"
+        many: "около %{count} месяцев назад"
+        other: "около %{count} месяцев назад"
+      x_months:
+        one: "%{count} месяц назад"
+        few: "%{count} месяца назад"
+        many: "%{count} месяцев назад"
+        other: "%{count} месяцев назад"
+      about_x_years:
+        one: "около года назад"
+        few: "около %{count} лет назад"
+        many: "около %{count} лет назад"
+        other: "около %{count} лет назад"
+      over_x_years:
+        one: "больше года назад"
+        few: "больше %{count} лет назад"
+        many: "больше %{count} лет назад"
+        other: "больше %{count} лет назад"
+      almost_x_years:
+        one: "почти год назад"
+        few: "почти %{count} года назад"
+        many: "почти %{count} лет назад"
+        other: "почти %{count} лет назад"
+  
+  devise:
+    confirmations:
+      confirmed: "Ваш email успешно подтверждён."
+      send_instructions: "Через несколько минут вы получите письмо с инструкциями по подтверждению вашего email."
+      send_paranoid_instructions: "Если ваш email есть в нашей базе, вы получите письмо с инструкциями по подтверждению."
+    failure:
+      already_authenticated: "Вы уже вошли в систему."
+      inactive: "Ваш аккаунт ещё не активирован."
+      invalid: "Неверный %{authentication_keys} или пароль."
+      locked: "Ваш аккаунт заблокирован."
+      last_attempt: "У вас осталась одна попытка перед блокировкой аккаунта."
+      not_found_in_database: "Неверный %{authentication_keys} или пароль."
+      timeout: "Ваша сессия истекла. Пожалуйста, войдите снова."
+      unauthenticated: "Вам необходимо войти или зарегистрироваться."
+      unconfirmed: "Вы должны подтвердить ваш email перед продолжением."
+    mailer:
+      confirmation_instructions:
+        subject: "Инструкции по подтверждению"
+      reset_password_instructions:
+        subject: "Инструкции по восстановлению пароля"
+      unlock_instructions:
+        subject: "Инструкции по разблокировке"
+      email_changed:
+        subject: "Email изменён"
+      password_change:
+        subject: "Пароль изменён"
+    omniauth_callbacks:
+      failure: "Не удалось аутентифицировать вас через %{kind}, потому что \"%{reason}\"."
+      success: "Успешная аутентификация через %{kind}."
+    passwords:
+      no_token: "Вы не можете попасть на эту страницу без ссылки сброса пароля."
+      send_instructions: "Через несколько минут вы получите письмо с инструкциями по сбросу пароля."
+      send_paranoid_instructions: "Если ваш email есть в нашей базе, вы получите ссылку для восстановления пароля."
+      updated: "Ваш пароль успешно изменён. Теперь вы вошли в систему."
+      updated_not_active: "Ваш пароль успешно изменён."
+    registrations:
+      destroyed: "До свидания! Ваш аккаунт успешно удалён. Надеемся увидеть вас снова."
+      signed_up: "Добро пожаловать! Вы успешно зарегистрировались."
+      signed_up_but_inactive: "Вы успешно зарегистрировались, но не можете войти, так как аккаунт ещё не активирован."
+      signed_up_but_locked: "Вы успешно зарегистрировались, но не можете войти, так как аккаунт заблокирован."
+      signed_up_but_unconfirmed: "Письмо с ссылкой для подтверждения отправлено на ваш email. Перейдите по ссылке для активации аккаунта."
+      update_needs_confirmation: "Аккаунт обновлён, но необходимо подтвердить новый email."
+      updated: "Аккаунт успешно обновлён."
+      updated_but_not_signed_in: "Аккаунт обновлён, но так как пароль был изменён, нужно войти снова."
+    sessions:
+      signed_in: "Вход выполнен успешно."
+      signed_out: "Выход выполнен успешно."
+      already_signed_out: "Выход выполнен успешно."
+    unlocks:
+      send_instructions: "Через несколько минут вы получите письмо с инструкциями по разблокировке."
+      send_paranoid_instructions: "Если аккаунт существует, вы получите письмо с инструкциями по разблокировке."
+      unlocked: "Аккаунт успешно разблокирован. Пожалуйста, войдите."
+  
+  errors:
+    messages:
+      already_confirmed: "уже подтверждён, попробуйте войти"
+      confirmation_period_expired: "должен быть подтверждён в течение %{period}, запросите новый"
+      expired: "истёк, запросите новый"
+      not_found: "не найдено"
+      not_locked: "не заблокирован"
+      not_saved:
+        one: "1 ошибка не позволяет сохранить %{resource}:"
+        other: "%{count} ошибок не позволяют сохранить %{resource}:"
